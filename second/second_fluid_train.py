@@ -10,7 +10,7 @@ import numpy
 import paddle
 import paddle.fluid as fluid
 
-params_dirname = "two.model"
+param_dirname = "two.model"
 
 def train_reader_func():
     def reader():
@@ -48,12 +48,9 @@ def main():
     sgd_optimizer = fluid.optimizer.SGD(learning_rate=0.002)
     sgd_optimizer.minimize(avg_loss)
 
-    test_program = main_program.clone(for_test=True)
-
     use_cuda = False
     place = fluid.CUDAPlace(0) if use_cuda else fluid.CPUPlace()
     exe = fluid.Executor(place)
-    test_exe = fluid.Executor(place)
 
     feeder = fluid.DataFeeder(place=place, feed_list=[x,y])
 
@@ -68,6 +65,9 @@ def main():
             )
             print("%s, Loss %s" % ("Train", avg_loss_value[0]))
 
+    # save inference model
+
+    fluid.io.save_inference_model(param_dirname, ['x'], [y_predict], exe)
 
 if __name__ == "__main__":
     main()
