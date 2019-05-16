@@ -34,7 +34,6 @@ def test_reader_func():
 def main():
     batch_size = 20
     train_reader = paddle.batch(paddle.reader.shuffle(train_reader_func(), buf_size=100), batch_size)
-    test_reader = paddle.batch(paddle.reader.shuffle(test_reader_func(), buf_size=100), batch_size)
 
     x = fluid.layers.data(name='x', shape=[2], dtype='float32')
     y = fluid.layers.data(name='y', shape=[1], dtype='float32')
